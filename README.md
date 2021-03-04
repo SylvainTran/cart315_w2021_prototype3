@@ -1,13 +1,8 @@
-# Merchant Story
+# Railcoaster Memories Death Trivia
 
-Take the role of a business manager running a shop stall from town to town. Attract customers by adjusting prices and fetching the best products in town!
+Your worst fears have come true. You are trapped on a railcoaster ride without end, and a sadistic game has taken place supernaturally: if you fail to answer the questions that will be asked of you, then you will be ejected from your seat!
 
 # Features
 
-- Load up your stock from products that you find in the world, [Stretch: or buy at a low price and resell for a profit]
-
-- Manage a stall in town [Stretch: but also a trading caravan if you want]
-
-- Increase your reputation [Stretch: and attract heroic customers who may become your patrons for their next big adventure's needs!]
-
-- [Stretch: Outbid your competitors and become a monopoly, or create a community-driven trade hub!]
+- FPS immersive ride on a railcoaster
+- Life or death questions having to do with your memories
