@@ -9,11 +9,9 @@ using System;
 public class TestSuite : MonoBehaviour
 {
     // Trivia quiz mini-game tests
-    string[] db = { "Id,Answer,Question,Choices", "1,C, 'How many twinkies did you eat on the morning of September 11th, 2001?',A:20;B:3;C:12" };
     [SetUp]
     public void Setup()
     {
-        Debug.Log(db[1]);
     }
     [UnityTest]
     public IEnumerator TriviaCanvasExists()
@@ -67,14 +65,11 @@ public class TestSuite : MonoBehaviour
         t.TryGetValue("1", out _t);
         if(_t.Length > 0)
         {
-            string testLine = _t[2];
-            Debug.Log(testLine);
-            StringAssert.AreEqualIgnoringCase("How many twinkies did you eat on the morning of September 11th, 2001?", testLine);
-        } else
-        {
-            Debug.Log("T is not what you think it is");
-        }
-        
+            string testLine = _t[1];
+            string testLine2 = _t[2];
+            StringAssert.AreEqualIgnoringCase("How many twinkies did you eat on the morning of September 11th 2001?", testLine);
+            StringAssert.AreEqualIgnoringCase("A:20;B:3;C:12", testLine2);
+        }         
     }
 
     public Dictionary<string, string[]> ParseTriviaDatabase(Dictionary<string, string[]> table, string[] triviaDb)
@@ -83,12 +78,11 @@ public class TestSuite : MonoBehaviour
         for (; i < triviaDb.Length; i++)
         {
             string[] fields = triviaDb[i].Split(',');
-            string choices = fields[3];
-            string question = fields[2];
-            string answer = fields[1];
-            string id = fields[0];
-            Debug.Log($"{id}");
-            table.Add(id, fields);
+            string choices = fields[3].Trim(new char[] { '\r', '\n' });
+            string question = fields[2].Trim(new char[] { '\r', '\n', '"' });
+            string answer = fields[1].Trim(new char[] { '\r', '\n' });
+            string id = fields[0].Trim(new char[] { '\r', '\n' });
+            table.Add(id, new string[] { answer, question, choices });
         }
         return table;
     }
