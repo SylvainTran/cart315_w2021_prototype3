@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Monster
   - TriviaCanvas
+  - TriviaQuestionTextPrefab
+  - TriviaQuestionChoiceAPrefab
+  - TriviaQuestionChoiceBPrefab
+  - TriviaQuestionChoiceCPrefab
+  - TriviaQuestionChoiceGroupPrefab
   layers:
   - Default
   - TransparentFX

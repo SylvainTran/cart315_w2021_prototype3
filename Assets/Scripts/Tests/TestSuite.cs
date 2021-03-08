@@ -79,9 +79,9 @@ public class TestSuite : MonoBehaviour
         {
             string[] fields = triviaDb[i].Split(',');
             string choices = fields[3].Trim(new char[] { '\r', '\n' });
-            string question = fields[2].Trim(new char[] { '\r', '\n', '"' });
+            string question = fields[2].Trim(new char[] { '\r', '\n', '"' }); // Remove the quotation marks from .csv auto export
             string answer = fields[1].Trim(new char[] { '\r', '\n' });
-            string id = fields[0].Trim(new char[] { '\r', '\n' });
+            string id = fields[0].Trim(new char[] { '\r', '\n' }); // A carriage return and line skip is actually there at the head
             table.Add(id, new string[] { answer, question, choices });
         }
         return table;
