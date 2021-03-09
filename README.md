@@ -6,4 +6,4 @@ Your worst fears have come true. You are trapped on a railcoaster ride without e
 
 - FPS immersive ride on a railcoaster
 - Life or death questions having to do with your memories
-- It's Educative Now : Improve your child's memory and skills by Showing Them What Happens If You FAIL! (You EXPLODE!)
+- It's Educative Now : Improve your child's memory and skills by Showing Them What Happens If You FAIL! (You fall down 35 miles and EXPLODE ALL OVER THE PLACE!)
