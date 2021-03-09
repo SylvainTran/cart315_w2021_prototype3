@@ -11,6 +11,8 @@ TagManager:
   - TriviaQuestionChoiceBPrefab
   - TriviaQuestionChoiceCPrefab
   - TriviaQuestionChoiceGroupPrefab
+  - LabelsPrefab
+  - TriviaQuestionFeedbackPrefab
   layers:
   - Default
   - TransparentFX
@@ -18,7 +20,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Railcoaster
   - 
   - 
   - 

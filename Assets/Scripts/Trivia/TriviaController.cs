@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using System;
 using TMPro;
+using UnityEngine.UI;
 
 public class TriviaController : MonoBehaviour
 {
@@ -13,25 +14,34 @@ public class TriviaController : MonoBehaviour
     public static GameObject triviaQuestionChoiceBPrefab;
     public static GameObject triviaQuestionChoiceCPrefab;
     public static GameObject triviaQuestionChoiceGroupPrefab;
+    public static GameObject labelsPrefab;
+    public static GameObject feedbackPrefab;
     private static string[] triviaDb;
     private static string[] questions;
     private static string[] shuffledQuestions;
     private static string[] shuffledChoices;
     private static string[] shuffledAnswers;
+    private static string[] shuffledPositiveFeedback;
+    private static string[] shuffledNegativeFeedback;
     private static int shuffledQuestionsCurrentIndex;
     private static string[] _choices;
     private static string[] answers;
+    private static string[] positiveFeedbacks;
+    private static string[] negativeFeedbacks;
 
     private void Start()
     {
+        Cursor.visible = true;
         triviaCanvas = GameObject.FindGameObjectWithTag("TriviaCanvas");
         LoadTriviaDatabase("triviadb.csv");
         InitializeTriviaArrays();
-        ParseTriviaDatabase("Id,Answer,Question,Choices");
+        ParseTriviaDatabase("Id,Answer,Question,Choices,FeedbackCorrect,FeedbackIncorrect");
         string[][] shuffledResult = ShuffleQuestions();
         shuffledQuestions = shuffledResult[0];
         shuffledChoices = shuffledResult[1];
         shuffledAnswers = shuffledResult[2];
+        shuffledPositiveFeedback = shuffledResult[3];
+        shuffledNegativeFeedback = shuffledResult[4];
         LogInfo();
         // Setup UI
         triviaQuestionPrefab = GameObject.FindGameObjectWithTag("TriviaQuestionTextPrefab");
@@ -39,8 +49,30 @@ public class TriviaController : MonoBehaviour
         triviaQuestionChoiceBPrefab = GameObject.FindGameObjectWithTag("TriviaQuestionChoiceBPrefab");
         triviaQuestionChoiceCPrefab = GameObject.FindGameObjectWithTag("TriviaQuestionChoiceCPrefab");
         triviaQuestionChoiceGroupPrefab = GameObject.FindGameObjectWithTag("TriviaQuestionChoiceGroupPrefab");
+        labelsPrefab = GameObject.FindGameObjectWithTag("LabelsPrefab");
+        feedbackPrefab = GameObject.FindGameObjectWithTag("TriviaQuestionFeedbackPrefab");
+        // Setup event listeners
+        triviaQuestionChoiceAPrefab.GetComponent<Button>().onClick.AddListener(() => TriviaChoicesButtonClickHandler('A'));
+        triviaQuestionChoiceBPrefab.GetComponent<Button>().onClick.AddListener(() => TriviaChoicesButtonClickHandler('B'));
+        triviaQuestionChoiceCPrefab.GetComponent<Button>().onClick.AddListener(() => TriviaChoicesButtonClickHandler('C'));
         // Start new round test
-        StartNewTriviaRound();
+        //StartNewTriviaRound();
+    }
+
+    private void FixedUpdate()
+    {
+        if(Input.GetKeyUp(KeyCode.Alpha1))
+        {
+            TriviaChoicesButtonClickHandler('A');
+        }
+        else if(Input.GetKeyUp(KeyCode.Alpha2))
+        {
+            TriviaChoicesButtonClickHandler('B');
+        }
+        else if (Input.GetKeyUp(KeyCode.Alpha3))
+        {
+            TriviaChoicesButtonClickHandler('C');
+        }
     }
 
     /**
@@ -51,6 +83,8 @@ public class TriviaController : MonoBehaviour
         questions = new string[triviaDb.Length - 1];
         _choices = new string[triviaDb.Length - 1];
         answers = new string[triviaDb.Length - 1];
+        positiveFeedbacks = new string[triviaDb.Length - 1];
+        negativeFeedbacks = new string[triviaDb.Length - 1];
     }
 
     /**
@@ -90,9 +124,13 @@ public class TriviaController : MonoBehaviour
         {
             string[] fields = triviaDb[i].Split(',');
             string id = fields[0].Trim(new char[] { '\r', '\n' });
+            string negativeFeedback = fields[5].Trim(new char[] { '\r', '\n', '"' });
+            string positiveFeedback = fields[4].Trim(new char[] { '\r', '\n', '"' });
             string choices = fields[3].Trim(new char[] { '\r', '\n' });
             string question = fields[2].Trim(new char[] { '\r', '\n', '"'}); // Remove the quotation marks from .csv auto export
             string answer = fields[1].Trim(new char[] { '\r', '\n' }); // A carriage return and line skip is actually there at the head
+            negativeFeedbacks[i - 1] = negativeFeedback;
+            positiveFeedbacks[i - 1] = positiveFeedback;
             questions[i-1] = question;
             _choices[i-1] = choices;
             answers[i-1] = answer;
@@ -105,6 +143,7 @@ public class TriviaController : MonoBehaviour
     * the prefabs for the canvas and its elements (buttons and labels
     * fitting the question randomly picked) on the screen.
     */
+
     /**
     * To begin a new trivia quiz, we need to load
     * a new question from the shuffled questions.
@@ -140,13 +179,15 @@ public class TriviaController : MonoBehaviour
         string[] shuffledQuestions = (string[])questions.Clone();
         string[] shuffledChoices = (string[])_choices.Clone();
         string[] shuffledAnswers = (string[])answers.Clone();
-        string[][] shuffledResult = new string[][] { shuffledQuestions, shuffledChoices, shuffledAnswers };
+        string[] shuffledPositiveFeedbacks = (string[])positiveFeedbacks.Clone();
+        string[] shuffledNegativeFeedbacks = (string[])negativeFeedbacks.Clone(); 
+        string[][] shuffledResult = new string[][] { shuffledQuestions, shuffledChoices, shuffledAnswers, shuffledPositiveFeedbacks, shuffledNegativeFeedbacks };
 
         for (int i = 0; i < shuffledQuestions.Length; i++)
         {
-            int randIndex = UnityEngine.Random.Range(0, shuffledQuestions.Length - 1);
+            int randIndex = UnityEngine.Random.Range(0, shuffledQuestions.Length);
             // Swap
-            //if (i == randIndex) continue;
+            if (i == randIndex) continue;
             string temp = shuffledQuestions[i];
             shuffledQuestions[i] = shuffledQuestions[randIndex];
             shuffledQuestions[randIndex] = temp;
@@ -158,6 +199,14 @@ public class TriviaController : MonoBehaviour
             temp = shuffledAnswers[i];
             shuffledAnswers[i] = shuffledAnswers[randIndex];
             shuffledAnswers[randIndex] = temp;
+
+            temp = shuffledPositiveFeedbacks[i];
+            shuffledPositiveFeedbacks[i] = shuffledPositiveFeedbacks[randIndex];
+            shuffledPositiveFeedbacks[randIndex] = temp;
+
+            temp = shuffledNegativeFeedbacks[i];
+            shuffledNegativeFeedbacks[i] = shuffledNegativeFeedbacks[randIndex];
+            shuffledNegativeFeedbacks[randIndex] = temp;
         }
         return shuffledResult;
     }
@@ -168,6 +217,7 @@ public class TriviaController : MonoBehaviour
     {
         ShowUIPanel(true);
         SetTriviaQuestionTextPrefabText(newQuestion);
+        SetTriviaQuestionFeedbackAlpha(0f);
         SetTriviaQuestionTextPrefabAlpha(255.0f);
         string[] splitChoices = new string[3];
         splitChoices[0] = newChoices.Split(';')[0].Split(':')[1];
@@ -182,7 +232,7 @@ public class TriviaController : MonoBehaviour
     */
     public static void ShowUIPanel(bool enabled)
     {
-        triviaCanvas.SetActive(enabled);
+        triviaCanvas.GetComponent<Canvas>().enabled = enabled;
     }
     /*
     * To show the text, we need to set the alpha higher. 
@@ -190,6 +240,10 @@ public class TriviaController : MonoBehaviour
     public static void SetTriviaQuestionTextPrefabAlpha(float value)
     {
         triviaQuestionPrefab.GetComponent<TextMeshProUGUI>().alpha = value;
+    }
+    public static void SetTriviaQuestionFeedbackAlpha(float value)
+    {
+        feedbackPrefab.GetComponent<TextMeshProUGUI>().alpha = value;
     }
     public static void SetTriviaQuestionTextPrefabText(string text)
     {
@@ -204,6 +258,25 @@ public class TriviaController : MonoBehaviour
     public static void DisplayTriviaChoicesGroupPrefab(bool enabled)
     {
         triviaQuestionChoiceGroupPrefab.GetComponent<Canvas>().enabled = enabled;
+        labelsPrefab.GetComponent<Canvas>().enabled = enabled;
+    }
+    public static void TriviaChoicesButtonClickHandler(char choice)
+    {
+        Debug.Log($"Clicked {choice}.");
+        // Check with current shuffled index correct answer
+        string text;
+        if(answers[shuffledQuestionsCurrentIndex] == choice.ToString())
+        {
+            Debug.Log("Chosen correct answer");
+            text = shuffledPositiveFeedback[shuffledQuestionsCurrentIndex];
+        } else
+        {
+            Debug.Log("Wrong answer, falling off ? -1 lives off the railcoaster wagon");
+            text = shuffledNegativeFeedback[shuffledQuestionsCurrentIndex];
+        }
+        SetTriviaQuestionTextPrefabAlpha(0f);
+        feedbackPrefab.GetComponent<TextMeshProUGUI>().text = text;
+        SetTriviaQuestionFeedbackAlpha(255.0f);
     }
     /**
      *  Log content of db.

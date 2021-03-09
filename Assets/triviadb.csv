@@ -1,3 +1,5 @@
-Id,Answer,Question,Choices,,,
-1,C,"How many twinkies did you eat on the morning of September 11th 2001?",A:20;B:3;C:12,,,
-2,B,1 + 1 = ?,A:2;B:0;C:1,,,
+Id,Answer,Question,Choices,FeedbackCorrect,FeedbackIncorrect,,,
+1,C,"How many twinkies did you eat on the morning of September 11th 2001?",A:20;B:3;C:12,You are a healthy person. Keep it up!,HOW COULD YOU FORGET?,,,
+2,B,1 + 1 = ?,A:2;B:0;C:1,Nice.,It was in modulo 2 arithmetic. Too bad.,,,
+3,C,Choose the most important thing,A:Eat twinkies;B:Marry a Celebrity;C:42,Well done. You are a person of culture.,You should read more often.,,,
+4,C,Where did you hide Brigitte The Rabbit?,A:The basement;B:The living room;C:The kitchen,Congratulations.,Too bad.,,,
