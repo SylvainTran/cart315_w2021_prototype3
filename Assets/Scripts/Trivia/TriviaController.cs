@@ -5,6 +5,7 @@ using System.IO;
 using System;
 using TMPro;
 using UnityEngine.UI;
+using PathCreation;
 
 public class TriviaController : MonoBehaviour
 {
@@ -16,6 +17,11 @@ public class TriviaController : MonoBehaviour
     public static GameObject triviaQuestionChoiceGroupPrefab;
     public static GameObject labelsPrefab;
     public static GameObject feedbackPrefab;
+    public static GameObject narrativeCanvas;
+    public static GameObject deathSoundsPrefab;
+    public AudioClip seatbeltFX;
+    public AudioClip oldManGaspingFX;
+    public AudioClip boneCrunchingFX;
     private static string[] triviaDb;
     private static string[] questions;
     private static string[] shuffledQuestions;
@@ -32,6 +38,7 @@ public class TriviaController : MonoBehaviour
     private void Start()
     {
         Cursor.visible = true;
+        shuffledQuestionsCurrentIndex = 0;
         triviaCanvas = GameObject.FindGameObjectWithTag("TriviaCanvas");
         LoadTriviaDatabase("triviadb.csv");
         InitializeTriviaArrays();
@@ -51,25 +58,27 @@ public class TriviaController : MonoBehaviour
         triviaQuestionChoiceGroupPrefab = GameObject.FindGameObjectWithTag("TriviaQuestionChoiceGroupPrefab");
         labelsPrefab = GameObject.FindGameObjectWithTag("LabelsPrefab");
         feedbackPrefab = GameObject.FindGameObjectWithTag("TriviaQuestionFeedbackPrefab");
+        narrativeCanvas = GameObject.FindGameObjectWithTag("NarrativeCanvas");
+        deathSoundsPrefab = GameObject.FindGameObjectWithTag("DeathSoundsPrefab");
         // Setup event listeners
-        triviaQuestionChoiceAPrefab.GetComponent<Button>().onClick.AddListener(() => TriviaChoicesButtonClickHandler('A'));
-        triviaQuestionChoiceBPrefab.GetComponent<Button>().onClick.AddListener(() => TriviaChoicesButtonClickHandler('B'));
-        triviaQuestionChoiceCPrefab.GetComponent<Button>().onClick.AddListener(() => TriviaChoicesButtonClickHandler('C'));
+        //triviaQuestionChoiceAPrefab.GetComponent<Button>().onClick.AddListener(() => TriviaChoicesButtonClickHandler('A'));
+        //triviaQuestionChoiceBPrefab.GetComponent<Button>().onClick.AddListener(() => TriviaChoicesButtonClickHandler('B'));
+        //triviaQuestionChoiceCPrefab.GetComponent<Button>().onClick.AddListener(() => TriviaChoicesButtonClickHandler('C'));
         // Start new round test
         //StartNewTriviaRound();
     }
 
     private void FixedUpdate()
     {
-        if(Input.GetKeyUp(KeyCode.Alpha1))
+        if(Input.GetKeyDown(KeyCode.Alpha1))
         {
             TriviaChoicesButtonClickHandler('A');
         }
-        else if(Input.GetKeyUp(KeyCode.Alpha2))
+        else if(Input.GetKeyDown(KeyCode.Alpha2))
         {
             TriviaChoicesButtonClickHandler('B');
         }
-        else if (Input.GetKeyUp(KeyCode.Alpha3))
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             TriviaChoicesButtonClickHandler('C');
         }
@@ -155,6 +164,18 @@ public class TriviaController : MonoBehaviour
         string newChoices = shuffledChoices[shuffledQuestionsCurrentIndex];
         string newAnswer = shuffledAnswers[shuffledQuestionsCurrentIndex];
         DisplayTriviaText(newQuestion, newChoices, newAnswer);
+    }
+    public static void StartNewTriviaRound(string level)
+    {
+        switch(level)
+        {
+            case "twinkie":
+                Debug.Log("Twinkie question coming:");
+                DisplayTriviaText(questions[0], _choices[0], answers[0]);
+                break;
+            default:
+                break;
+        }
     }
     // Listener (if player is not dead, we put the cooldown on the trivia panel)
     public static void CooldownTriviaPanel()
@@ -260,7 +281,7 @@ public class TriviaController : MonoBehaviour
         triviaQuestionChoiceGroupPrefab.GetComponent<Canvas>().enabled = enabled;
         labelsPrefab.GetComponent<Canvas>().enabled = enabled;
     }
-    public static void TriviaChoicesButtonClickHandler(char choice)
+    public void TriviaChoicesButtonClickHandler(char choice)
     {
         Debug.Log($"Clicked {choice}.");
         // Check with current shuffled index correct answer
@@ -269,10 +290,20 @@ public class TriviaController : MonoBehaviour
         {
             Debug.Log("Chosen correct answer");
             text = shuffledPositiveFeedback[shuffledQuestionsCurrentIndex];
+            CooldownTriviaPanel();
+            narrativeCanvas.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "You answered correctly,\nand didn't get ejected from\nyour seat as a result.";
+            narrativeCanvas.GetComponent<Canvas>().enabled = true;
+            return;
         } else
         {
             Debug.Log("Wrong answer, falling off ? -1 lives off the railcoaster wagon");
             text = shuffledNegativeFeedback[shuffledQuestionsCurrentIndex];
+            // Fall off the roller coaster
+            AudioSource[] deathSounds = deathSoundsPrefab.GetComponents<AudioSource>();
+            deathSounds[0].PlayOneShot(seatbeltFX);
+            deathSounds[1].PlayOneShot(oldManGaspingFX);
+            deathSounds[2].PlayOneShot(boneCrunchingFX);
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PathFollower>().enabled = false;
         }
         SetTriviaQuestionTextPrefabAlpha(0f);
         feedbackPrefab.GetComponent<TextMeshProUGUI>().text = text;

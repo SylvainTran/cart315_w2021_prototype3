@@ -4,5 +4,14 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: cdecf976ae4bf4ab08d934f9fb1bce92
+  - enabled: 1
+    path: Assets/Scenes/RollercoasterThemePark.unity
+    guid: 2ecd8e38e8d78c84c9a332b6ab8f9b8f
+  - enabled: 1
+    path: Assets/Scenes/TwinkieMemory.unity
+    guid: 54b7303d473b64e26aded6d3a6c93f9a
   m_configObjects: {}

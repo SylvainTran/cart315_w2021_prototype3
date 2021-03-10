@@ -59,3 +59,7 @@ sysinfo.txt
 crashlytics-build.properties
 
 Rollercoaster Memories Death Trivia.numbers
+
+*.aup
+*.au
+*.au.meta

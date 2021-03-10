@@ -13,6 +13,9 @@ TagManager:
   - TriviaQuestionChoiceGroupPrefab
   - LabelsPrefab
   - TriviaQuestionFeedbackPrefab
+  - Twinkie
+  - NarrativeCanvas
+  - DeathSoundsPrefab
   layers:
   - Default
   - TransparentFX
