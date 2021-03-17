@@ -27,6 +27,7 @@ public class BallCollision : MonoBehaviour
         if(collision.gameObject.CompareTag("Player"))
         {
             // Do something
+
         }
     }
 }

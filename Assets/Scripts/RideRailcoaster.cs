@@ -15,11 +15,17 @@ public class RideRailcoaster : MonoBehaviour
         SoundController.StopFootstepSound();
         SimpleController_UsingPlayerInput.playerIsOnRollerCoaster = true;
     }
-    public static void StartRide(GameObject player)
+    public static void StartRide(GameObject player, bool ride)
     {
-        player.gameObject.GetComponent<PathFollower>().enabled = true;
-        SoundController.StopFootstepSound();
-        SimpleController_UsingPlayerInput.playerIsOnRollerCoaster = true;
+        player.gameObject.GetComponent<PathFollower>().enabled = ride;
+        if(ride)
+        {
+            SoundController.StopFootstepSound();
+        } else
+        {
+            SoundController.PlayFootstepSound();
+        }
+        SimpleController_UsingPlayerInput.playerIsOnRollerCoaster = ride;
     }
 
     private void OnTriggerEnter(Collider other)

@@ -10,6 +10,7 @@ using UnityEngine.SceneManagement;
 public sealed class Main : MonoBehaviour
 {
     public static bool playedTwinkieMemory = false;
+    public static bool answeredTwinkieTrivia = false;
 
     private void Start()
     {

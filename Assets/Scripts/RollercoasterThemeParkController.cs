@@ -10,7 +10,7 @@ public class RollercoasterThemeParkController : MonoBehaviour
         if(Main.playedTwinkieMemory)
         {
             // Start off on the rollercoaster
-            RideRailcoaster.StartRide(GameObject.FindGameObjectWithTag("Player"));
+            RideRailcoaster.StartRide(GameObject.FindGameObjectWithTag("Player"), true);
             // Show twinkie trivia
             TriviaController.StartNewTriviaRound("twinkie");
         }
@@ -19,6 +19,9 @@ public class RollercoasterThemeParkController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(Main.answeredTwinkieTrivia)
+        {
+            RideRailcoaster.StartRide(GameObject.FindGameObjectWithTag("Player"), false);
+        }
     }
 }

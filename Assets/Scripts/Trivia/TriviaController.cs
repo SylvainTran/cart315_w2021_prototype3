@@ -34,6 +34,7 @@ public class TriviaController : MonoBehaviour
     private static string[] answers;
     private static string[] positiveFeedbacks;
     private static string[] negativeFeedbacks;
+    private static float delay = 15.0f;
 
     private void Start()
     {
@@ -70,17 +71,35 @@ public class TriviaController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            TriviaChoicesButtonClickHandler('A');
+            ++delay;
+            if (delay >= 15)
+            {
+                TriviaChoicesButtonClickHandler('A');
+                delay = 0;
+            }
         }
-        else if(Input.GetKeyDown(KeyCode.Alpha2))
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            TriviaChoicesButtonClickHandler('B');
+            ++delay;
+            if (delay >= 15)
+            {
+                TriviaChoicesButtonClickHandler('B');
+                delay = 0;
+            }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            TriviaChoicesButtonClickHandler('C');
+            ++delay;
+            if (delay >= 15)
+            {
+                TriviaChoicesButtonClickHandler('C');
+                delay = 0;
+            }
+        } else
+        {
+            delay = 15.0f;
         }
     }
 
@@ -170,8 +189,10 @@ public class TriviaController : MonoBehaviour
         switch(level)
         {
             case "twinkie":
-                Debug.Log("Twinkie question coming:");
                 DisplayTriviaText(questions[0], _choices[0], answers[0]);
+                break;
+            case "heaven":
+                DisplayTriviaText(questions[1], _choices[1], answers[1]);
                 break;
             default:
                 break;
@@ -181,7 +202,6 @@ public class TriviaController : MonoBehaviour
     public static void CooldownTriviaPanel()
     {
         ++shuffledQuestionsCurrentIndex;
-        ShowUIPanel(false);
         SetTriviaQuestionTextPrefabAlpha(0f);
         DisplayTriviaChoicesGroupPrefab(false);
     }
@@ -255,6 +275,11 @@ public class TriviaController : MonoBehaviour
     {
         triviaCanvas.GetComponent<Canvas>().enabled = enabled;
     }
+    public IEnumerator HideUIPanel()
+    {
+        yield return new WaitForSeconds(3.0f);
+        triviaCanvas.GetComponent<Canvas>().enabled = false;
+    }
     /*
     * To show the text, we need to set the alpha higher. 
     */
@@ -289,10 +314,12 @@ public class TriviaController : MonoBehaviour
         if(answers[shuffledQuestionsCurrentIndex] == choice.ToString())
         {
             Debug.Log("Chosen correct answer");
+            Main.answeredTwinkieTrivia = true;
             text = shuffledPositiveFeedback[shuffledQuestionsCurrentIndex];
             CooldownTriviaPanel();
             narrativeCanvas.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "You answered correctly,\nand didn't get ejected from\nyour seat as a result.";
             narrativeCanvas.GetComponent<Canvas>().enabled = true;
+            StartCoroutine("HideUIPanel");
             return;
         } else
         {
@@ -304,6 +331,7 @@ public class TriviaController : MonoBehaviour
             deathSounds[1].PlayOneShot(oldManGaspingFX);
             deathSounds[2].PlayOneShot(boneCrunchingFX);
             GameObject.FindGameObjectWithTag("Player").GetComponent<PathFollower>().enabled = false;
+            ShowUIPanel(false);
         }
         SetTriviaQuestionTextPrefabAlpha(0f);
         feedbackPrefab.GetComponent<TextMeshProUGUI>().text = text;

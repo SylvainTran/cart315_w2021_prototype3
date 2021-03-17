@@ -7,6 +7,7 @@ public class TriggerMemory : MonoBehaviour
 {
     public GameObject RollercoasterController;
     public GameObject SoundController;
+    public string nextScene;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -24,6 +25,7 @@ public class TriggerMemory : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         SimpleController_UsingPlayerInput.playerIsOnRollerCoaster = false;
-        SceneManager.LoadScene("TwinkieMemory");
+        Debug.Log("Changing scene to " + nextScene);
+        SceneManager.LoadScene(nextScene);
     }
 }

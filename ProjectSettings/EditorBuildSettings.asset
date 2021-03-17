@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/RollercoasterThemePark.unity
     guid: 2ecd8e38e8d78c84c9a332b6ab8f9b8f
   - enabled: 1
-    path: Assets/Scenes/TwinkieMemory.unity
-    guid: 54b7303d473b64e26aded6d3a6c93f9a
+    path: Assets/Scenes/BrendaRollercoaster.unity
+    guid: 57a1c6bf8d5f442cab8ce5f29e974266
+  - enabled: 1
+    path: Assets/Scenes/BrendaMemoryFlashback.unity
+    guid: 2cb739c3b2a3845609bc77e475b850cb
   m_configObjects: {}
