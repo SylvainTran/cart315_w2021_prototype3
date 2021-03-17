@@ -6,6 +6,7 @@ using System;
 using TMPro;
 using UnityEngine.UI;
 using PathCreation;
+using UnityEngine.SceneManagement;
 
 public class TriviaController : MonoBehaviour
 {
@@ -320,6 +321,13 @@ public class TriviaController : MonoBehaviour
             narrativeCanvas.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "You answered correctly,\nand didn't get ejected from\nyour seat as a result.";
             narrativeCanvas.GetComponent<Canvas>().enabled = true;
             StartCoroutine("HideUIPanel");
+            int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+            if(currentSceneIndex < SceneManager.sceneCount)
+            {
+                Debug.Log("Changing scene by index");
+                SceneManager.LoadScene(++currentSceneIndex);
+            }
+            SceneManager.LoadScene("BrendaRollercoaster");
             return;
         } else
         {

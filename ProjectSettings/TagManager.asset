@@ -16,6 +16,7 @@ TagManager:
   - Twinkie
   - NarrativeCanvas
   - DeathSoundsPrefab
+  - MemoryTrigger
   layers:
   - Default
   - TransparentFX

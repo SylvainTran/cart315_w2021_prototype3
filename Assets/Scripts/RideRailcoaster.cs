@@ -33,7 +33,10 @@ public class RideRailcoaster : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             StartRide(other);
-            GetComponent<AudioSource>().Play();
+            if(GetComponent<AudioSource>())
+            {
+                GetComponent<AudioSource>().Play();
+            }
             narrativeCanvas.GetComponent<Canvas>().enabled = true;
             StartCoroutine(FadeNarrativeCanvas(5.0f));
         }
