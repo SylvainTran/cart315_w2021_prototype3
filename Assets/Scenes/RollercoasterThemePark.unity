@@ -5503,7 +5503,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RollercoasterController: {fileID: 324942029}
   SoundController: {fileID: 365865777}
-  nextScene: TwinkieMemory
+  nextScene: BrendaRollercoaster
 --- !u!54 &1164823490
 Rigidbody:
   m_ObjectHideFlags: 0
